@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  alpha_generator:
+    build: .
+    container_name: alpha_generator
+    restart: always
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./data:/app/data
+      - ./models:/app/models
+    environment:
+      - PYTHONUNBUFFERED=1
+    command: ["python", "src/alpha_gui.py"]
+
+  backtesting_engine:
+    build: .
+    container_name: backtesting_engine
+    restart: always
+    volumes:
+      - ./data:/app/data
+    command: ["python", "scripts/run_backtest.py"]
+
+  ppo_training:
+    build: .
+    container_name: ppo_training
+    restart: always
+    volumes:
+      - ./data:/app/data
+      - ./models:/app/models
+    command: ["python", "scripts/train_reinforcement_learning.py"]
